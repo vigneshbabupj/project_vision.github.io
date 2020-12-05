@@ -4,15 +4,13 @@
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
 
-## Project Vision
-
 <br />
 <p align="center">
   <a href="https://github.com/vigneshbabupj/Project_Vision">
     <img src="documents/Computer_vision.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">Project Vision</h3>
+  <h1 align="center">Project Vision</h1>
 
   <p align="center">
     Phase 1 Capstone Project
@@ -25,6 +23,33 @@
     <a href="vigneshbabupj@gmail.com">Vignesh Babu P J</a>
   </p>
 </p>
+
+
+<!-- TABLE OF CONTENTS -->
+<details open="open">
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#markdown">Markdown</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#acknowledgements">Acknowledgements</a></li>
+  </ol>
+</details>
 
 
 
