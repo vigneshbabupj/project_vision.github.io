@@ -20,7 +20,7 @@
     <br />
     <a href="https://github.com/vigneshbabupj/Project_Vision">View Repo</a>
     ·
-    <a href="vigneshbabupj@gmail.com">Vignesh Babu P J</a>
+    <a href="mailto:vigneshbabupj@gmail.com">Vignesh Babu P J</a>
   </p>
 </p>
 
