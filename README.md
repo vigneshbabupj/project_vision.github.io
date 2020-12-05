@@ -4,11 +4,29 @@
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
 
-## Welcome to GitHub Pages
+## Project Vision
 
-You can use the [editor on GitHub](https://github.com/vigneshbabupj/project_vision.github.io/edit/main/README.md) to maintain and preview the content for your website in Markdown files.
+<br />
+<p align="center">
+  <a href="https://github.com/vigneshbabupj/Project_Vision">
+    <img src="documents/Computer_vision.png" alt="Logo" width="80" height="80">
+  </a>
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+  <h3 align="center">Project Vision</h3>
+
+  <p align="center">
+    Phase 1 Capstone Project
+    <br />
+    <a href="https://theschoolof.ai"><strong>Extension Vision AI Program 5</strong></a>
+    <br />
+    <br />
+    <a href="https://github.com/vigneshbabupj/Project_Vision">View Repo</a>
+    ·
+    <a href="vigneshbabupj@gmail.com">Vignesh Babu P J</a>
+  </p>
+</p>
+
+
 
 ### Markdown
 
