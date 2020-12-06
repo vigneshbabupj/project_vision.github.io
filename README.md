@@ -428,14 +428,23 @@ Significant amount of time was invested in the initial to read all the research 
   2.  Trining on small resolution images - Initial few epochs was performed on 64x64 images but this could only be done for Object detection and depth map as planercnn accepts image only with minimum size of 256
   3. Optimum resolution as which the entire model could train is 512 x 512, most of the epchs are run with this resolution
   4. The additional data was used for training the planercnn mode separately
+  5. The time taken for each epoch initial was around 1.15 hours, this was reduced after standardising the image scales in all decoder to 512, (Planercnn had 480\*640 and midas was working with 384\*384). The time taken for each epoch right now is 40-50 min
 
-### Jekyll Themes
+  6. **Part 1 training** we could see the overall loss decreasing as the model is getting trained, The initial for epoch 0 was at 21. ([notebook](https://github.com/vigneshbabupj/Project_Vision/blob/main/Project_vision_Training_Part1.ipynb))
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/vigneshbabupj/project_vision.github.io/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+  ![part1](https://github.com/vigneshbabupj/Project_Vision/blob/main/documents/Training_part1.jpg)
+
+  7. **Part 2 training** the overall loss further reduced in subsquent epochs to 7 ([notebook](https://github.com/vigneshbabupj/Project_Vision/blob/main/Training_part2.ipynb)])
+
+
+  ![part2](https://github.com/vigneshbabupj/Project_Vision/blob/main/documents/Training_part2.jpg)
+
+
+
 
 ### Support or Contact
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+For any further clarification or support kindly check my github [repo](https://github.com/vigneshbabupj) or [contact](mailto:vigneshbabupj@gmail.com)
 
 [pytorch-shield]: http://img.shields.io/badge/pytorch-1.7-red?style=for-the-badge&logo=PyTorch
 [license-shield]: https://img.shields.io/apm/l/vim-mode?style=for-the-badge
