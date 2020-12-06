@@ -115,48 +115,48 @@ In this section I will explain the steps taken to reach the final trainable mode
 Significant amount of time was invested in the initial to read all the research papers of each model and get a understanding of their architecture, this would enable us to split their encoder from their decoder.
 
   1. **Step 1:** To define the high outline of the final model and then start to give definition for each of its components
-    - The structure of the model defined is as below:
+    - The structure of the model defined is as below
 
-```markdown
+    ```python
 
-      class VisionNet(nn.Module):
+          class VisionNet(nn.Module):
 
-        '''
-          Network for detecting objects, generate depth map and identify plane surfaces
-        '''
+            '''
+              Network for detecting objects, generate depth map and identify plane surfaces
+            '''
 
-        def __init__(self,yolo_input,midas_input,planercnn_input):
-          super(VisionNet, self).__init__()
-          """
-            Get required configuration for all the 3 models
-          
-          """
-          self.yolo_params = yolo_input
-          self.midas_params = midas_input
-          self.planercnn_params = planercnn_input
-          
-          self.encoder = define Encoder class()
+            def __init__(self,yolo_input,midas_input,planercnn_input):
+              super(VisionNet, self).__init__()
+              """
+                Get required configuration for all the 3 models
+              
+              """
+              self.yolo_params = yolo_input
+              self.midas_params = midas_input
+              self.planercnn_params = planercnn_input
+              
+              self.encoder = Define Encoder()
 
-          self.plane_decoder = Define Plane decoder(self.planercnn_params)
+              self.plane_decoder = Define Plane decoder(self.planercnn_params)
 
-          self.depth_decoder = Define Depth decoder(self.midas_params)
-          
-          self.bbox_decoder =  Define Yolo decoder(self.yolo_params)
-          
+              self.depth_decoder = Define Depth decoder(self.midas_params)
+              
+              self.bbox_decoder =  Define Yolo decoder(self.yolo_params)
+              
 
-        def forward(self,x):
+            def forward(self,x):
 
-          x = self.encoder(x)
+              x = self.encoder(x)
 
-          plane_out = self.plane_decoder(x)
+              plane_out = self.plane_decoder(x)
 
-          depth_out = self.depth_decoder(x)
-          
-          bbox_out = self.bbox_decoder(x)
+              depth_out = self.depth_decoder(x)
+              
+              bbox_out = self.bbox_decoder(x)
 
-          return  plane_out, bbox_out, depth_out
+              return  plane_out, bbox_out, depth_out
 
-```
+    ```
   2. **Step 2:** Define Encoder Block
     - The 3 different encoder block in each of the networks:
       - MidasNet - ResNext101_32x8d_wsl
@@ -164,9 +164,125 @@ Significant amount of time was invested in the initial to read all the research 
       - Yolov3 - Darknet-53
     - My initial thoughts was to use Darknet as the base encoder, as the similar accuracy as ResNet and it is almost 2x faster based on performance on ImageNet dataset, but the downside of it is compartively complex to separate only the config of Darknet from Yolov3 config and then run the same code blocks from Yolov3 from model definition and forward method, This could mean i have to recreate those code blocks with changes so that only Darknet encoder is proccesed.
     Hence, as the enocder-decoder of Yolov3 is tighly coupled in code i decided against using it.
-    - On other two options, I had tried both of them separately as the encoder blocks, based on the benchmarks ResNext-101 has perfomed better than Resnet-101 and ResNext WSL is maintained by facebook and are pre-trained in weakly-supervised fashion on 940 million public images with 1.5K hashtags matching with 1000 ImageNet1K synsets, followed by fine-tuning on ImageNet1K dataset, So the below ResNext block is used as enoder with the pretrained weights.
-    
-    > resnet = torch.hub.load("facebookresearch/WSL-Images", "resnext101_32x8d_wsl")
+    - On other two options, I had tried both of them separately as the encoder blocks, based on the benchmarks ResNext-101 has perfomed better than Resnet-101 and ResNext WSL is maintained by facebook and are pre-trained in weakly-supervised fashion on 940 million public images with 1.5K hashtags matching with 1000 ImageNet1K synsets, followed by fine-tuning on ImageNet1K dataset, So the below ResNext block is used as enoder with the pretrained weights
+
+    ```python
+         resnet = torch.hub.load("facebookresearch/WSL-Images", "resnext101_32x8d_wsl")
+    ```
+    - The encoder is defined with 4 pretrained layers
+    ```python
+      def _make_resnet_backbone(resnet):
+          pretrained = nn.Module()
+          pretrained.layer1 = nn.Sequential(
+              resnet.conv1, resnet.bn1, resnet.relu, resnet.maxpool, resnet.layer1
+          )
+
+          pretrained.layer2 = resnet.layer2
+          pretrained.layer3 = resnet.layer3
+          pretrained.layer4 = resnet.layer4
+
+          return pretrained
+
+    ```
+
+
+
+  3. **Step 3:** Define Depth decoder block
+    - This was pretty direct reference form the midasnet block excluding only the pretrained encoder.
+    ```python
+    class MidasNet_decoder(nn.Module):
+    """Network for monocular depth estimation.
+    """
+
+    def __init__(self, path=None, features=256,non_negative=True):
+        super(MidasNet_decoder, self).__init__()
+        """Init.
+
+        Args:
+            path (str, optional): Path to saved model. Defaults to None.
+            features (int, optional): Number of features. Defaults to 256.
+
+        """
+        self.scratch = _make_encoder_scratch(features)
+
+        self.scratch.refinenet4 = FeatureFusionBlock(features)
+        self.scratch.refinenet3 = FeatureFusionBlock(features)
+        self.scratch.refinenet2 = FeatureFusionBlock(features)
+        self.scratch.refinenet1 = FeatureFusionBlock(features)
+
+        self.scratch.output_conv = nn.Sequential(
+            nn.Conv2d(features, 128, kernel_size=3, stride=1, padding=1),
+            Interpolate(scale_factor=2, mode="bilinear"),
+            nn.Conv2d(128, 32, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(True),
+            nn.Conv2d(32, 1, kernel_size=1, stride=1, padding=0),
+            nn.ReLU(True) if non_negative else nn.Identity(),
+        )
+
+
+    def forward(self, *xs):
+        """Forward pass.
+
+        Args:
+            x (tensor): input data (image)
+
+        Returns:
+            tensor: depth
+        """
+
+        layer_1, layer_2, layer_3, layer_4 =  [xs[0][i] for i in range(4)]
+
+
+        layer_1_rn = self.scratch.layer1_rn(layer_1)
+        layer_2_rn = self.scratch.layer2_rn(layer_2)
+        layer_3_rn = self.scratch.layer3_rn(layer_3)
+        layer_4_rn = self.scratch.layer4_rn(layer_4)
+        #print('layer_4_rn',layer_4_rn[0][0])
+
+        path_4 = self.scratch.refinenet4(layer_4_rn)
+        path_3 = self.scratch.refinenet3(path_4, layer_3_rn)
+        path_2 = self.scratch.refinenet2(path_3, layer_2_rn)
+        path_1 = self.scratch.refinenet1(path_2, layer_1_rn)
+
+        out = self.scratch.output_conv(path_1)
+        #print('out',out.size(),out)
+        #print('out squeeze',torch.squeeze(out, dim=1).size(),torch.squeeze(out, dim=1))
+
+        final_out = torch.squeeze(out, dim=1)
+
+        return final_out
+        ```
+  4. **Step 4:** Define Object detection decoder block
+    - yolov3 custom cfg file had to be changed to omit the encoder part of the network and retain only the decoder part
+    - Darknet-53 is feature extrator that extends upto the 75th layers in the yolo network, also a key point to note is there are 3 skip connection from the Darknet encoder to decoder for object detection
+    - A print of the layer name with the sizes give understanding of the each layer along with their output shape -[file](https://github.com/vigneshbabupj/Project_Vision/blob/main/bbox_decoder/Actual_layers_sizes)
+    - To pass the output from the encoder layers to the corresponding layer in Yolo, a 1x1 convolution was used
+      - Encoder layer 2 output --> Yolo 36th layer
+      - Encoder layer 3 output --> Yolo 61st layer
+      - Encoder layer 4 output --> Yolo 75th layer
+        ```python
+        init:
+        self.conv1 = nn.Conv2d(in_channels=2048, out_channels=1024, kernel_size=(1, 1), padding=0, bias=False)
+        self.conv2 = nn.Conv2d(in_channels=1024, out_channels=512, kernel_size=(1, 1), padding=0, bias=False)
+        self.conv3 = nn.Conv2d(in_channels=512, out_channels=256, kernel_size=(1, 1), padding=0, bias=False)
+
+        forward:
+        Yolo_75 = self.conv1(layer_4)
+        Yolo_61 = self.conv2(layer_3)
+        Yolo_36 = self.conv3(layer_2)
+
+        ```
+
+    - The Darknet layer configuration post the custom changes can ve viewed from this [updated file](https://github.com/vigneshbabupj/Project_Vision/blob/main/bbox_decoder/yolo_layer_size_vignesh)
+
+  5. **Step 5:** Define Plane segmentation decoder block
+    - Planercnn is built of MaskRcnn network which consists of resnet101 as the backbone for feature extractor and then it is followed by FPN,RPN and rest of the layers for detections
+    - The first 5 layers(C1 - C5) of FPN are directly from the resnet101 block, which i changed to connect to our layers from the custom encoder block (note: C1 & C2 together form the layer 1 of our ResNext101 Encoder)
+      - Encoder layer 1 output --> FPN C1 layer
+      - Encoder layer 2 output --> FPN C2 layer
+      - Encoder layer 3 output --> FPN C3 layer
+      - Encoder layer 4 output --> FPN C4 layer
+    -  
 
 
 
