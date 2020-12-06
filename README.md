@@ -72,6 +72,7 @@ The Network is of Encoder-Decoder Architecture
 
 - Layers: 1056
 - Parameters: 23.7m
+- Trained Model weight - [Download](https://drive.google.com/file/d/1iP1Twh74zqczOJOcmhGLCxe_DpbwZ3KY/view?usp=sharing)
 
 ## Dataset 
 
@@ -257,27 +258,27 @@ Significant amount of time was invested in the initial to read all the research 
 
   4. **Step 4:** Define Object detection decoder block
 
-    - yolov3 custom cfg file had to be changed to omit the encoder part of the network and retain only the decoder part
-    - Darknet-53 is feature extrator that extends upto the 75th layers in the yolo network, also a key point to note is there are 3 skip connection from the Darknet encoder to decoder for object detection
-    - A print of the layer name with the sizes give understanding of the each layer along with their output shape -[file](https://github.com/vigneshbabupj/Project_Vision/blob/main/bbox_decoder/Actual_layers_sizes)
-    - To pass the output from the encoder layers to the corresponding layer in Yolo, a 1x1 convolution was used
-      - Encoder layer 2 output --> Yolo 36th layer
-      - Encoder layer 3 output --> Yolo 61st layer
-      - Encoder layer 4 output --> Yolo 75th layer
-        ```python
-          init:
-          self.conv1 = nn.Conv2d(in_channels=2048, out_channels=1024, kernel_size=(1, 1), padding=0, bias=False)
-          self.conv2 = nn.Conv2d(in_channels=1024, out_channels=512, kernel_size=(1, 1), padding=0, bias=False)
-          self.conv3 = nn.Conv2d(in_channels=512, out_channels=256, kernel_size=(1, 1), padding=0, bias=False)
+  - yolov3 custom cfg file had to be changed to omit the encoder part of the network and retain only the decoder part
+  - Darknet-53 is feature extrator that extends upto the 75th layers in the yolo network, also a key point to note is there are 3 skip connection from the Darknet encoder to decoder for object detection
+  - A print of the layer name with the sizes give understanding of the each layer along with their output shape -[file](https://github.com/vigneshbabupj/Project_Vision/blob/main/bbox_decoder/Actual_layers_sizes)
+  - To pass the output from the encoder layers to the corresponding layer in Yolo, a 1x1 convolution was used
+    - Encoder layer 2 output --> Yolo 36th layer
+    - Encoder layer 3 output --> Yolo 61st layer
+    - Encoder layer 4 output --> Yolo 75th layer
+      ```python
+        init:
+        self.conv1 = nn.Conv2d(in_channels=2048, out_channels=1024, kernel_size=(1, 1), padding=0, bias=False)
+        self.conv2 = nn.Conv2d(in_channels=1024, out_channels=512, kernel_size=(1, 1), padding=0, bias=False)
+        self.conv3 = nn.Conv2d(in_channels=512, out_channels=256, kernel_size=(1, 1), padding=0, bias=False)
 
-          forward:
-          Yolo_75 = self.conv1(layer_4)
-          Yolo_61 = self.conv2(layer_3)
-          Yolo_36 = self.conv3(layer_2)
+        forward:
+        Yolo_75 = self.conv1(layer_4)
+        Yolo_61 = self.conv2(layer_3)
+        Yolo_36 = self.conv3(layer_2)
 
-        ```
+      ```
 
-      - The Darknet layer configuration post the custom changes can ve viewed from this [updated file](https://github.com/vigneshbabupj/Project_Vision/blob/main/bbox_decoder/yolo_layer_size_vignesh)
+  - The Darknet layer configuration post the custom changes can ve viewed from this [updated file](https://github.com/vigneshbabupj/Project_Vision/blob/main/bbox_decoder/yolo_layer_size_vignesh)
 
   5. **Step 5:** Define Plane segmentation decoder block
       * Planercnn is built of MaskRcnn network which consists of resnet101 as the backbone for feature extractor and then it is followed by FPN,RPN and rest of the layers for detections
@@ -434,13 +435,15 @@ Significant amount of time was invested in the initial to read all the research 
 
   ![part1](https://github.com/vigneshbabupj/Project_Vision/blob/main/documents/Training_part1.jpg)
 
-  7. **Part 2 training** the overall loss further reduced in subsquent epochs to 7 ([notebook](https://github.com/vigneshbabupj/Project_Vision/blob/main/Training_part2.ipynb)])
+  7. **Part 2 training** the overall loss further reduced in subsquent epochs to 7 ([notebook](https://github.com/vigneshbabupj/Project_Vision/blob/main/Training_part2.ipynb))
 
 
   ![part2](https://github.com/vigneshbabupj/Project_Vision/blob/main/documents/Training_part2.jpg)
 
 
+## Detection
 
+  1. Detections can be performed using the detection.py
 
 ### Support or Contact
 
