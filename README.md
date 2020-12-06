@@ -6,9 +6,7 @@
 
 <br />
 <p align="center">
-  <a href="https://github.com/vigneshbabupj/Project_Vision/blob/main/">
-    <img src="documents/Computer_vision.png" alt="Logo" width="80" height="80">
-  </a>
+    <img src="https://github.com/vigneshbabupj/Project_Vision/blob/main/documents/Computer_vision.png" alt="Logo" width="80" height="80">
 
   <h1 align="center">Project Vision</h1>
 
@@ -416,29 +414,14 @@ Significant amount of time was invested in the initial to read all the research 
       **all_loss = (add_plane_loss \* plane_loss) + (add_yolo_loss \* yolo_loss) + (add_midas_loss \* depth_loss)**
 
     5. **Step 5:** Optimizer
-        - 
+        - Stochastic Gradient Descent(SGD) is used as the default optimizer with the below params
+          - start lr : 0.01
+          - Final lr : 0.0005
+          - momentum : 0.937
+          - weight_decay : 0.000484  
+        - Scheduler : Lambda lr
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
 
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
 
 ### Jekyll Themes
 
