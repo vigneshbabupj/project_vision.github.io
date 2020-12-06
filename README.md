@@ -66,7 +66,7 @@ The strategy is to use pre-trained networks and use their outputs as the ground 
 
 ## Model
 
-The Network is of Encoder-Decoder Architecture.
+The Network is of Encoder-Decoder Architecture
 
 ![vision](https://github.com/vigneshbabupj/Project_Vision/blob/main/documents/vision.png)
 
@@ -114,7 +114,8 @@ In this section I will explain the steps taken to reach the final trainable mode
 Significant amount of time was invested in the initial to read all the research papers of each model and get a understanding of their architecture, this would enable us to split their encoder from their decoder.
 
   1. **Step 1:** To define the high outline of the final model and then start to give definition for each of its components
-      - The structure of the model defined is as below
+
+      * The structure of the model defined is as below
 
     ```python
 
@@ -191,68 +192,68 @@ Significant amount of time was invested in the initial to read all the research 
       - This was pretty direct reference form the midasnet block excluding only the pretrained encoder
 
     ```python
-    class MidasNet_decoder(nn.Module):
-    """Network for monocular depth estimation.
-    """
+      class MidasNet_decoder(nn.Module):
+      """Network for monocular depth estimation.
+      """
 
-    def __init__(self, path=None, features=256,non_negative=True):
-        super(MidasNet_decoder, self).__init__()
-        """Init.
+      def __init__(self, path=None, features=256,non_negative=True):
+          super(MidasNet_decoder, self).__init__()
+          """Init.
 
-        Args:
-            path (str, optional): Path to saved model. Defaults to None.
-            features (int, optional): Number of features. Defaults to 256.
+          Args:
+              path (str, optional): Path to saved model. Defaults to None.
+              features (int, optional): Number of features. Defaults to 256.
 
-        """
-        self.scratch = _make_encoder_scratch(features)
+          """
+          self.scratch = _make_encoder_scratch(features)
 
-        self.scratch.refinenet4 = FeatureFusionBlock(features)
-        self.scratch.refinenet3 = FeatureFusionBlock(features)
-        self.scratch.refinenet2 = FeatureFusionBlock(features)
-        self.scratch.refinenet1 = FeatureFusionBlock(features)
+          self.scratch.refinenet4 = FeatureFusionBlock(features)
+          self.scratch.refinenet3 = FeatureFusionBlock(features)
+          self.scratch.refinenet2 = FeatureFusionBlock(features)
+          self.scratch.refinenet1 = FeatureFusionBlock(features)
 
-        self.scratch.output_conv = nn.Sequential(
-            nn.Conv2d(features, 128, kernel_size=3, stride=1, padding=1),
-            Interpolate(scale_factor=2, mode="bilinear"),
-            nn.Conv2d(128, 32, kernel_size=3, stride=1, padding=1),
-            nn.ReLU(True),
-            nn.Conv2d(32, 1, kernel_size=1, stride=1, padding=0),
-            nn.ReLU(True) if non_negative else nn.Identity(),
-        )
-
-
-    def forward(self, *xs):
-        """Forward pass.
-
-        Args:
-            x (tensor): input data (image)
-
-        Returns:
-            tensor: depth
-        """
-
-        layer_1, layer_2, layer_3, layer_4 =  [xs[0][i] for i in range(4)]
+          self.scratch.output_conv = nn.Sequential(
+              nn.Conv2d(features, 128, kernel_size=3, stride=1, padding=1),
+              Interpolate(scale_factor=2, mode="bilinear"),
+              nn.Conv2d(128, 32, kernel_size=3, stride=1, padding=1),
+              nn.ReLU(True),
+              nn.Conv2d(32, 1, kernel_size=1, stride=1, padding=0),
+              nn.ReLU(True) if non_negative else nn.Identity(),
+          )
 
 
-        layer_1_rn = self.scratch.layer1_rn(layer_1)
-        layer_2_rn = self.scratch.layer2_rn(layer_2)
-        layer_3_rn = self.scratch.layer3_rn(layer_3)
-        layer_4_rn = self.scratch.layer4_rn(layer_4)
-        #print('layer_4_rn',layer_4_rn[0][0])
+      def forward(self, *xs):
+          """Forward pass.
 
-        path_4 = self.scratch.refinenet4(layer_4_rn)
-        path_3 = self.scratch.refinenet3(path_4, layer_3_rn)
-        path_2 = self.scratch.refinenet2(path_3, layer_2_rn)
-        path_1 = self.scratch.refinenet1(path_2, layer_1_rn)
+          Args:
+              x (tensor): input data (image)
 
-        out = self.scratch.output_conv(path_1)
-        #print('out',out.size(),out)
-        #print('out squeeze',torch.squeeze(out, dim=1).size(),torch.squeeze(out, dim=1))
+          Returns:
+              tensor: depth
+          """
 
-        final_out = torch.squeeze(out, dim=1)
+          layer_1, layer_2, layer_3, layer_4 =  [xs[0][i] for i in range(4)]
 
-        return final_out
-        ```
+
+          layer_1_rn = self.scratch.layer1_rn(layer_1)
+          layer_2_rn = self.scratch.layer2_rn(layer_2)
+          layer_3_rn = self.scratch.layer3_rn(layer_3)
+          layer_4_rn = self.scratch.layer4_rn(layer_4)
+          #print('layer_4_rn',layer_4_rn[0][0])
+
+          path_4 = self.scratch.refinenet4(layer_4_rn)
+          path_3 = self.scratch.refinenet3(path_4, layer_3_rn)
+          path_2 = self.scratch.refinenet2(path_3, layer_2_rn)
+          path_1 = self.scratch.refinenet1(path_2, layer_1_rn)
+
+          out = self.scratch.output_conv(path_1)
+          #print('out',out.size(),out)
+          #print('out squeeze',torch.squeeze(out, dim=1).size(),torch.squeeze(out, dim=1))
+
+          final_out = torch.squeeze(out, dim=1)
+
+          return final_out
+    ```
 
 
   4. **Step 4:** Define Object detection decoder block
