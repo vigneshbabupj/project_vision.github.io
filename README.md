@@ -15,8 +15,9 @@
     <li><a href="#set-up-model-training">Set up Model Training</a></li>
     <li><a href="#training">Training</a></li>
     <li><a href="#detection">Detection</a></li>
-    <li><a href="#future-scope">Future Scope</a></li>
-    <li><a href="#Support-or-Contact">Support or Contact</a></li>
+    <li><a href="#future-scope">Future Scope</a></li> 
+    <li><a href="#leaving-note">Leaving Note</a></li>
+    <li><a href="#Support-or-Contact">Contact</a></li>
   </ol>
 </details>
 
@@ -231,7 +232,7 @@ Significant amount of time was invested in the initial to read all the research 
 
   - yolov3 custom cfg file had to be changed to omit the encoder part of the network and retain only the decoder part
   - Darknet-53 is feature extrator that extends upto the 75th layers in the yolo network, also a key point to note is there are 3 skip connection from the Darknet encoder to decoder for object detection
-  - A print of the layer name with the sizes give understanding of the each layer along with their output shape -[file](https://github.com/vigneshbabupj/Project_Vision/blob/main/bbox_decoder/Actual_layers_sizes)
+  - A print of the layer name with the sizes give understanding of the each layer along with their output shape [FILE](https://github.com/vigneshbabupj/Project_Vision/blob/main/bbox_decoder/Actual_layers_sizes)
   - To pass the output from the encoder layers to the corresponding layer in Yolo, a 1x1 convolution was used
     - Encoder layer 2 output --> Yolo 36th layer
     - Encoder layer 3 output --> Yolo 61st layer
@@ -249,7 +250,7 @@ Significant amount of time was invested in the initial to read all the research 
 
       ```
 
-  - The Darknet layer configuration post the custom changes can ve viewed from this [updated file](https://github.com/vigneshbabupj/Project_Vision/blob/main/bbox_decoder/yolo_layer_size_vignesh)
+  - The Darknet layer configuration post the custom changes can ve viewed from this [CUSTOM FILE](https://github.com/vigneshbabupj/Project_Vision/blob/main/bbox_decoder/yolo_layer_size_vignesh)
 
   5. **Step 5:** Define Plane segmentation decoder block
       * Planercnn is built of MaskRcnn network which consists of resnet101 as the backbone for feature extractor and then it is followed by FPN,RPN and rest of the layers for detections
@@ -259,7 +260,7 @@ Significant amount of time was invested in the initial to read all the research 
           * Encoder layer 3 output --> FPN C3 layer
           * Encoder layer 4 output --> FPN C4 layer
       * Key concept in Planercnn integration is that the default nms and ROI is coplied on the torch verions 0.4, which is incompatible with other decoder modules which use latest torch version, to handle this the default nms was replaced with the nms from torchvision and the ROI Align buit on pytorch([link](https://github.com/longcw/RoIAlign.pytorch)) was used
-      * One key issue faced during training is of gradient explosion after one iteration of the model train, post significant time debuggin the reason in due to the replacement of the resnet101 directly with the custom encoder blocks, the solution for the issue was to retain the resnet101 structure but to replace the value of tht corresponding layers in FPN with enocder layers in the forward method
+      * One key issue faced during training is of gradient explosion after one iteration of the model train, post significant time debugging the reason in due to the replacement of the resnet101 directly with the custom encoder blocks, the solution for the issue was to retain the resnet101 structure but to replace the value of tht corresponding layers in FPN with enocder layers in the forward method
 
   6. **Step 6:** The Trainable model
 
@@ -294,10 +295,7 @@ Significant amount of time was invested in the initial to read all the research 
 
           self.depth_decoder = MidasNet_decoder(path)
 
-          
-
           self.bbox_decoder =  Darknet(self.yolo_params)
-          
 
           self.conv1 = nn.Conv2d(in_channels=2048, out_channels=1024, kernel_size=(1, 1), padding=0, bias=False)
           self.conv2 = nn.Conv2d(in_channels=1024, out_channels=512, kernel_size=(1, 1), padding=0, bias=False)
@@ -436,7 +434,12 @@ Significant amount of time was invested in the initial to read all the research 
   - Collect more data and train the model for more epochs
   - Play around with loss function
 
-### Support or Contact
+## Leaving Note
+  - My journey of the capstone project is best summarised with the image below
+    ![journey](https://pbs.twimg.com/media/Egysf0HXkAAMeAn.jpg)
+  - There were many days were I thought I would never a trainable model but to progress till here i consider it a success, and I take immense confidence out from this project that now i would be able to deal with any difficult complex problem if I am persistant.
+
+### Contact
 
 For any further clarification or support kindly check my github [repo](https://github.com/vigneshbabupj) or [contact](mailto:vigneshbabupj@gmail.com)
 
