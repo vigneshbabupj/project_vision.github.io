@@ -4,48 +4,18 @@
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
 
-<br />
-<p align="center">
-    <img src="https://github.com/vigneshbabupj/Project_Vision/blob/main/documents/Computer_vision.png" alt="Logo" width="80" height="80">
-
-  <h1 align="center">Project Vision</h1>
-
-  <p align="center">
-    Phase 1 Capstone Project
-    <br />
-    <a href="https://theschoolof.ai"><strong>Extension Vision AI Program 5</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/vigneshbabupj/Project_Vision">View Repo</a>
-    ·
-    <a href="mailto:vigneshbabupj@gmail.com">Vignesh Babu P J</a>
-  </p>
-</p>
-
-
 <!-- TABLE OF CONTENTS -->
 <details open="open">
   <summary>Table of Contents</summary>
   <ol>
-    <li>
-      <a href="#problem-statement">Problem Statement</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
+    <li><a href="#problem-statement">Problem Statement</a></li>
     <li><a href="#model">Model</a></li>
-    <li>
-      <a href="#dataset">Dataset</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
+    <li><a href="#dataset">Dataset</a></li>
+    <li><a href="#model-development">Model Development</a></li>
+    <li><a href="#set-up-model-training">Set up Model Training</a></li>
+    <li><a href="#training">Training</a></li>
+    <li><a href="#detection">Detection</a></li>
+    <li><a href="#Support-or-Contact">Support or Contact</a></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
   </ol>
 </details>
@@ -433,17 +403,30 @@ Significant amount of time was invested in the initial to read all the research 
 
   6. **Part 1 training** we could see the overall loss decreasing as the model is getting trained, The initial for epoch 0 was at 21. ([notebook](https://github.com/vigneshbabupj/Project_Vision/blob/main/Project_vision_Training_Part1.ipynb))
 
-  ![part1](https://github.com/vigneshbabupj/Project_Vision/blob/main/documents/Training_part1.jpg)
+    ![part1](https://github.com/vigneshbabupj/Project_Vision/blob/main/documents/Training_part1.jpg)
 
   7. **Part 2 training** the overall loss further reduced in subsquent epochs to 7 ([notebook](https://github.com/vigneshbabupj/Project_Vision/blob/main/Training_part2.ipynb))
 
-
-  ![part2](https://github.com/vigneshbabupj/Project_Vision/blob/main/documents/Training_part2.jpg)
+    ![part2](https://github.com/vigneshbabupj/Project_Vision/blob/main/documents/Training_part2.jpg)
 
 
 ## Detection
 
-  1. Detections can be performed using the detection.py
+  - Detections can be performed using the detection\.py with the below code [notebook](https://github.com/vigneshbabupj/Project_Vision/blob/main/Detection_notebook.ipynb)
+
+  > python detection.py 
+
+    - Example:
+      - Object Detection output:
+
+      ![yoloy_out](https://github.com/vigneshbabupj/Project_Vision/blob/main/documents/Yolo_output.jpg)
+
+      - Midas detection
+
+      ![midas_out](https://github.com/vigneshbabupj/Project_Vision/blob/main/documents/19_depth.png)
+
+
+
 
 ### Support or Contact
 
