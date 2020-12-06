@@ -414,13 +414,13 @@ Significant amount of time was invested in the initial to read all the research 
       - overall loss
       **all_loss = (add_plane_loss \* plane_loss) + (add_yolo_loss \* yolo_loss) + (add_midas_loss \* depth_loss)**
 
-    5. **Step 5:** Optimizer
-        - Stochastic Gradient Descent(SGD) is used as the default optimizer with the below params
-          - start lr : 0.01
-          - Final lr : 0.0005
-          - momentum : 0.937
-          - weight_decay : 0.000484  
-        - Scheduler : Lambda lr
+  5. **Step 5:** Optimizer
+      - Stochastic Gradient Descent(SGD) is used as the default optimizer with the below params
+        - start lr : 0.01
+        - Final lr : 0.0005
+        - momentum : 0.937
+        - weight_decay : 0.000484
+      - Scheduler : Lambda lr
 
 
 
