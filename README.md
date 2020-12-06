@@ -168,11 +168,11 @@ Significant amount of time was invested in the initial to read all the research 
       Hence, as the enocder-decoder of Yolov3 is tighly coupled in code i decided against using it.
       - On other two options, I had tried both of them separately as the encoder blocks, based on the benchmarks ResNext-101 has perfomed better than Resnet-101 and ResNext WSL is maintained by facebook and are pre-trained in weakly-supervised fashion on 940 million public images with 1.5K hashtags matching with 1000 ImageNet1K synsets, followed by fine-tuning on ImageNet1K dataset, So the below ResNext block is used as enoder with the pretrained weights
 
-```python
-     resnet = torch.hub.load("facebookresearch/WSL-Images", "resnext101_32x8d_wsl")
-```
-
-      - The encoder is defined with 4 pretrained layers
+      ```python
+           resnet = torch.hub.load("facebookresearch/WSL-Images", "resnext101_32x8d_wsl")
+      ```
+      
+  - The encoder is defined with 4 pretrained layers
 
 
     ```python
@@ -181,19 +181,16 @@ Significant amount of time was invested in the initial to read all the research 
           pretrained.layer1 = nn.Sequential(
               resnet.conv1, resnet.bn1, resnet.relu, resnet.maxpool, resnet.layer1
           )
-
           pretrained.layer2 = resnet.layer2
           pretrained.layer3 = resnet.layer3
           pretrained.layer4 = resnet.layer4
-
           return pretrained
-
     ```
 
 
   3. **Step 3:** Define Depth decoder block
-    - This was pretty direct reference form the midasnet block excluding only the pretrained encoder
 
+      - This was pretty direct reference form the midasnet block excluding only the pretrained encoder
 
     ```python
     class MidasNet_decoder(nn.Module):
@@ -261,6 +258,7 @@ Significant amount of time was invested in the initial to read all the research 
 
 
   4. **Step 4:** Define Object detection decoder block
+
     - yolov3 custom cfg file had to be changed to omit the encoder part of the network and retain only the decoder part
     - Darknet-53 is feature extrator that extends upto the 75th layers in the yolo network, also a key point to note is there are 3 skip connection from the Darknet encoder to decoder for object detection
     - A print of the layer name with the sizes give understanding of the each layer along with their output shape -[file](https://github.com/vigneshbabupj/Project_Vision/blob/main/bbox_decoder/Actual_layers_sizes)
@@ -281,20 +279,20 @@ Significant amount of time was invested in the initial to read all the research 
 
         ```
 
-    - The Darknet layer configuration post the custom changes can ve viewed from this [updated file](https://github.com/vigneshbabupj/Project_Vision/blob/main/bbox_decoder/yolo_layer_size_vignesh)
+      - The Darknet layer configuration post the custom changes can ve viewed from this [updated file](https://github.com/vigneshbabupj/Project_Vision/blob/main/bbox_decoder/yolo_layer_size_vignesh)
 
   5. **Step 5:** Define Plane segmentation decoder block
-    * Planercnn is built of MaskRcnn network which consists of resnet101 as the backbone for feature extractor and then it is followed by FPN,RPN and rest of the layers for detections
-    * The first 5 layers(C1 - C5) of FPN are directly from the resnet101 block, which i changed to connect to our layers from the custom encoder block (note: C1 & C2 together form the layer 1 of our ResNext101 Encoder)
-        * Encoder layer 1 output --> FPN C1 layer
-        * Encoder layer 2 output --> FPN C2 layer
-        * Encoder layer 3 output --> FPN C3 layer
-        * Encoder layer 4 output --> FPN C4 layer
-    * Key concept in Planercnn integration is that the default nms and ROI is coplied on the torch verions 0.4, which is incompatible with other decoder modules which use latest torch version, to handle this the default nms was replaced with the nms from torchvision and the ROI Align buit on pytorch([link](https://github.com/longcw/RoIAlign.pytorch)) was used
+      * Planercnn is built of MaskRcnn network which consists of resnet101 as the backbone for feature extractor and then it is followed by FPN,RPN and rest of the layers for detections
+      * The first 5 layers(C1 - C5) of FPN are directly from the resnet101 block, which i changed to connect to our layers from the custom encoder block (note: C1 & C2 together form the layer 1 of our ResNext101 Encoder)
+          * Encoder layer 1 output --> FPN C1 layer
+          * Encoder layer 2 output --> FPN C2 layer
+          * Encoder layer 3 output --> FPN C3 layer
+          * Encoder layer 4 output --> FPN C4 layer
+      * Key concept in Planercnn integration is that the default nms and ROI is coplied on the torch verions 0.4, which is incompatible with other decoder modules which use latest torch version, to handle this the default nms was replaced with the nms from torchvision and the ROI Align buit on pytorch([link](https://github.com/longcw/RoIAlign.pytorch)) was used
 
   6. **Step 6:** The Trainable model
 
-    * The Final trainable version of the model is as below
+  * The Final trainable version of the model is as below
 
     ```python
       class VisionNet(nn.Module):
@@ -379,13 +377,12 @@ Significant amount of time was invested in the initial to read all the research 
     ```
 
 
-
 ## Set up Model Training
   1. **Step 1:** Define input parameters for training
       - As each of the 3 network have their own multiple default parameters for decoder configurations and data preproccessing, I combined the Arg parser of all the 3 decoders into single file [options.py](https://github.com/vigneshbabupj/Project_Vision/blob/main/options.py)
       - This ensures we able to pass the required input parameters including weights path for each of the decoders separately
 
-  2. **Step 2:**Define Sekelton
+  2. **Step 2:** Define Skeleton
       - 
 
 
