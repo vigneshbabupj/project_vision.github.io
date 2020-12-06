@@ -115,46 +115,46 @@ Significant amount of time was invested in the initial to read all the research 
 
   1. **Step 1:** To define the high outline of the final model and then start to give definition for each of its components
 
-      * The structure of the model defined is as below
+  * The structure of the model defined is as below
 
     ```python
 
-          class VisionNet(nn.Module):
+        class VisionNet(nn.Module):
 
-            '''
-              Network for detecting objects, generate depth map and identify plane surfaces
-            '''
+          '''
+            Network for detecting objects, generate depth map and identify plane surfaces
+          '''
 
-            def __init__(self,yolo_input,midas_input,planercnn_input):
-              super(VisionNet, self).__init__()
-              """
-                Get required configuration for all the 3 models
-              
-              """
-              self.yolo_params = yolo_input
-              self.midas_params = midas_input
-              self.planercnn_params = planercnn_input
-              
-              self.encoder = Define Encoder()
+          def __init__(self,yolo_input,midas_input,planercnn_input):
+            super(VisionNet, self).__init__()
+            """
+              Get required configuration for all the 3 models
+            
+            """
+            self.yolo_params = yolo_input
+            self.midas_params = midas_input
+            self.planercnn_params = planercnn_input
+            
+            self.encoder = Define Encoder()
 
-              self.plane_decoder = Define Plane decoder(self.planercnn_params)
+            self.plane_decoder = Define Plane decoder(self.planercnn_params)
 
-              self.depth_decoder = Define Depth decoder(self.midas_params)
-              
-              self.bbox_decoder =  Define Yolo decoder(self.yolo_params)
-              
+            self.depth_decoder = Define Depth decoder(self.midas_params)
+            
+            self.bbox_decoder =  Define Yolo decoder(self.yolo_params)
+            
 
-            def forward(self,x):
+          def forward(self,x):
 
-              x = self.encoder(x)
+            x = self.encoder(x)
 
-              plane_out = self.plane_decoder(x)
+            plane_out = self.plane_decoder(x)
 
-              depth_out = self.depth_decoder(x)
-              
-              bbox_out = self.bbox_decoder(x)
+            depth_out = self.depth_decoder(x)
+            
+            bbox_out = self.bbox_decoder(x)
 
-              return  plane_out, bbox_out, depth_out
+            return  plane_out, bbox_out, depth_out
 
     ```
 
@@ -171,8 +171,7 @@ Significant amount of time was invested in the initial to read all the research 
            resnet = torch.hub.load("facebookresearch/WSL-Images", "resnext101_32x8d_wsl")
       ```
       
-  - The encoder is defined with 4 pretrained layers
-
+  * The encoder is defined with 4 pretrained layers
 
     ```python
       def _make_resnet_backbone(resnet):
@@ -189,7 +188,7 @@ Significant amount of time was invested in the initial to read all the research 
 
   3. **Step 3:** Define Depth decoder block
 
-      - This was pretty direct reference form the midasnet block excluding only the pretrained encoder
+  - This was pretty direct reference form the midasnet block excluding only the pretrained encoder
 
     ```python
       class MidasNet_decoder(nn.Module):
@@ -402,7 +401,6 @@ Significant amount of time was invested in the initial to read all the research 
         - RMSE(Root Mean Square Error): RMSE helps to cut the large errors interms of difference in the intensity of the pixels of the image
         ![rmse](https://media.geeksforgeeks.org/wp-content/uploads/20200622171741/RMSE1.jpg)
         - SSIM(structural similarity index measure): SSIM helps to also measure the structural differences between the predicted and the acutal depths and also to punish noises in the prediction
-        ![ssim]()
         - **Depth_loss = RMSE + SSIM**
 
       - Plane Segmentation - to define loss for plane segmentation 
@@ -412,6 +410,7 @@ Significant amount of time was invested in the initial to read all the research 
         - **Plane_loss = computed_loss + MSE_Loss + SSIM**
 
       - overall loss
+
       **all_loss = (add_plane_loss \* plane_loss) + (add_yolo_loss \* yolo_loss) + (add_midas_loss \* depth_loss)**
 
   5. **Step 5:** Optimizer
@@ -422,7 +421,13 @@ Significant amount of time was invested in the initial to read all the research 
         - weight_decay : 0.000484
       - Scheduler : Lambda lr
 
-
+## Training
+  1. One key issue faced during the training for frequent running out of memory, below steps were used to handle the same
+    - Clear torch cuda cache at the end of each epoch
+    - use python grabage collector at the end of each training iteration to clear the space of variables that are no longer required
+  2.  Trining on small resolution images - Initial few epochs was performed on 64x64 images but this could only be done for Object detection and depth map as planercnn accepts image only with minimum size of 256
+  3. Optimum resolution as which the entire model could train is 512 x 512, most of the epchs are run with this resolution
+  4. The additional data was used for training the planercnn mode separately
 
 ### Jekyll Themes
 
