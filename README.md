@@ -30,13 +30,14 @@
   <summary>Table of Contents</summary>
   <ol>
     <li>
-      <a href="#markdown">Markdown</a>
+      <a href="#problem-statement">Problem Statement</a>
       <ul>
         <li><a href="#built-with">Built With</a></li>
       </ul>
     </li>
+    <li><a href="#model">Model</a></li>
     <li>
-      <a href="#getting-started">Getting Started</a>
+      <a href="#dataset">Dataset</a>
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#installation">Installation</a></li>
@@ -52,7 +53,7 @@
 </details>
 
 
-### Problem Statement
+## Problem Statement
 The assignment is to create a network that can perform 3 tasks simultaneously:
   1. Predict the boots, PPE, hardhat, and mask if there is an image
   2. Predict the depth map of the image
@@ -65,7 +66,7 @@ The strategy is to use pre-trained networks and use their outputs as the ground 
 
 
 
-### Model
+## Model
 
 The Network is of Encoder-Decoder Architecture.
 
@@ -74,7 +75,7 @@ The Network is of Encoder-Decoder Architecture.
 - Layers: 1056
 - Parameters: 23.7m
 
-### Dataset 
+## Dataset 
 
 The data used for the training of the model is as below.
 
@@ -109,7 +110,7 @@ A detailed explanation and code can be found in this [Repo](https://github.com/v
 - A [Youtube Video](https://www.youtube.com/watch?v=mUtSU5u9AMM) of indoor surfaces is used to create images by generating frame every 0.5 second,the frames are then used to generate the Planercnn output.
 
 
-### Model Development
+## Model Development
 
 In this section I will explain the steps taken to reach the final trainable model.
 Significant amount of time was invested in the initial to read all the research papers of each model and get a understanding of their architecture, this would enable us to split their encoder from their decoder.
@@ -282,7 +283,94 @@ Significant amount of time was invested in the initial to read all the research 
       - Encoder layer 2 output --> FPN C2 layer
       - Encoder layer 3 output --> FPN C3 layer
       - Encoder layer 4 output --> FPN C4 layer
-    -  
+    - Key concept in Planercnn integration is that the default nms and ROI is coplied on the torch verions 0.4, which is incompatible with other decoder modules which use latest torch version, to handle this the default nms was replaced with the nms from torchvision and the ROI Align buit on pytorch([link](https://github.com/longcw/RoIAlign.pytorch)) was used
+
+  6. **Step 6:** The Trainable model
+    - The Final trainable version of the model is as below:
+    ```python
+      class VisionNet(nn.Module):
+
+        '''
+          Network for detecting objects, generate depth map and identify plane surfaces
+        '''
+
+        def __init__(self,yolo_cfg,midas_cfg,planercnn_cfg,path=None):
+          super(VisionNet, self).__init__()
+          """
+            Get required configuration for all the 3 models
+          
+          """
+          self.yolo_params = yolo_cfg
+          self.midas_params = midas_cfg
+          self.planercnn_params = planercnn_cfg
+          self.path = path
+
+          use_pretrained = False if path is None else True
+
+          print('use_pretrained',use_pretrained)
+          print('path',path)
+          
+          self.encoder = _make_resnet_encoder(use_pretrained)
+
+          self.plane_decoder = MaskRCNN(self.planercnn_params,self.encoder)
+
+          self.depth_decoder = MidasNet_decoder(path)
+
+          
+
+          self.bbox_decoder =  Darknet(self.yolo_params)
+          
+
+          self.conv1 = nn.Conv2d(in_channels=2048, out_channels=1024, kernel_size=(1, 1), padding=0, bias=False)
+          self.conv2 = nn.Conv2d(in_channels=1024, out_channels=512, kernel_size=(1, 1), padding=0, bias=False)
+          self.conv3 = nn.Conv2d(in_channels=512, out_channels=256, kernel_size=(1, 1), padding=0, bias=False)
+          
+          self.info(False)
+
+        def forward(self,yolo_ip,midas_ip,plane_ip):
+
+          x = yolo_ip
+          #x = midas_ip
+
+          # Encoder blocks
+          layer_1 = self.encoder.layer1(x)
+          layer_2 = self.encoder.layer2(layer_1)
+          layer_3 = self.encoder.layer3(layer_2)
+          layer_4 = self.encoder.layer4(layer_3)
+
+          Yolo_75 = self.conv1(layer_4)
+          Yolo_61 = self.conv2(layer_3)
+          Yolo_36 = self.conv3(layer_2)
+
+          if plane_ip is not None:
+            plane_ip['input'][0] = yolo_ip
+            # PlaneRCNN decoder
+            plane_out = self.plane_decoder.forward(plane_ip,[layer_1, layer_2, layer_3, layer_4])
+          else:
+            plane_out = None
+
+          if midas_ip is not None:
+            # MiDaS depth decoder
+            depth_out = self.depth_decoder([layer_1, layer_2, layer_3, layer_4])
+          else:
+            depth_out = None
+
+          #YOLOv3 bbox decoder
+          if not self.training:
+            inf_out, train_out = self.bbox_decoder(Yolo_75,Yolo_61,Yolo_36)
+            bbox_out=[inf_out, train_out]
+          else:
+            bbox_out = self.bbox_decoder(Yolo_75,Yolo_61,Yolo_36)
+
+          return  plane_out, bbox_out, depth_out
+
+        def info(self, verbose=False):
+          torch_utils.model_info(self, verbose)
+
+    ```
+
+## Define Model Training
+
 
 
 
