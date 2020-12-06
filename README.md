@@ -116,7 +116,8 @@ Significant amount of time was invested in the initial to read all the research 
 
   1. **Step 1:** To define the high outline of the final model and then start to give definition for each of its components
     - The structure of the model defined is as below:
-    ```markdown
+
+```markdown
 
       class VisionNet(nn.Module):
 
@@ -155,7 +156,7 @@ Significant amount of time was invested in the initial to read all the research 
 
           return  plane_out, bbox_out, depth_out
 
-    ```
+```
   2. **Step 2:** Define Encoder Block
     - The 3 different encoder block in each of the networks:
       - MidasNet - ResNext101_32x8d_wsl
