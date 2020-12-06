@@ -403,11 +403,11 @@ Significant amount of time was invested in the initial to read all the research 
 
   6. **Part 1 training** we could see the overall loss decreasing as the model is getting trained, The initial for epoch 0 was at 21. ([notebook](https://github.com/vigneshbabupj/Project_Vision/blob/main/Project_vision_Training_Part1.ipynb))
 
-    ![part1](https://github.com/vigneshbabupj/Project_Vision/blob/main/documents/Training_part1.jpg)
+  ![part1](https://github.com/vigneshbabupj/Project_Vision/blob/main/documents/Training_part1.jpg)
 
   7. **Part 2 training** the overall loss further reduced in subsquent epochs to 7 ([notebook](https://github.com/vigneshbabupj/Project_Vision/blob/main/Training_part2.ipynb))
 
-    ![part2](https://github.com/vigneshbabupj/Project_Vision/blob/main/documents/Training_part2.jpg)
+  ![part2](https://github.com/vigneshbabupj/Project_Vision/blob/main/documents/Training_part2.jpg)
 
 
 ## Detection
