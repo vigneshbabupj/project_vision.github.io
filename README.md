@@ -439,7 +439,7 @@ Significant amount of time was invested in the initial to read all the research 
     ![journey](https://pbs.twimg.com/media/Egysf0HXkAAMeAn.jpg)
   - There were many days were I thought I would never reach a trainable model but to progress till here i consider it a success, and I take immense confidence out from this project that now i would be able to deal with any difficult complex problem if I am persistant
   - Thanks to **Rohan Shravan** for being the best mentor and **Zoheb** for all the immense learning in past 4 months
-  - ***Hope to See you in Phase 2 !!! ***
+  - ***Hope to See you in Phase 2 !!!***
 
 ### Contact
 
