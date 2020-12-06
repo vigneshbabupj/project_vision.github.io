@@ -118,7 +118,7 @@ Significant amount of time was invested in the initial to read all the research 
   1. **Step 1:** To define the high outline of the final model and then start to give definition for each of its components
       - The structure of the model defined is as below
 
-    ```python
+    ```markdown
 
           class VisionNet(nn.Module):
 
