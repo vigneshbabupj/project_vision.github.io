@@ -112,6 +112,59 @@ A detailed explanation and code can be found in this [Repo](https://github.com/v
 ### Model Development
 
 In this section I will explain the steps taken to reach the final trainable model.
+Significant amount of time was invested in the initial to read all the research papers of each model and get a understanding of their architecture, this would enable us to split their encoder from their decoder.
+
+  1. **Step 1:** To define the high outline of the final model and then start to give definition for each of its components
+    - The structure of the model defined is as below:
+    ```
+
+class VisionNet(nn.Module):
+
+  '''
+    Network for detecting objects, generate depth map and identify plane surfaces
+  '''
+
+  def __init__(self,yolo_input,midas_input,planercnn_input):
+    super(VisionNet, self).__init__()
+    """
+      Get required configuration for all the 3 models
+    
+    """
+    self.yolo_params = yolo_input
+    self.midas_params = midas_input
+    self.planercnn_params = planercnn_input
+    
+    self.encoder = define Encoder class()
+
+    self.plane_decoder = Define Plane decoder(self.planercnn_params)
+
+    self.depth_decoder = Define Depth decoder(self.midas_params)
+    
+    self.bbox_decoder =  Define Yolo decoder(self.yolo_params)
+    
+
+  def forward(self,x):
+
+    x = self.encoder(x)
+
+    plane_out = self.plane_decoder(x)
+
+    depth_out = self.depth_decoder(x)
+    
+    bbox_out = self.bbox_decoder(x)
+
+    return  plane_out, bbox_out, depth_out
+
+    ```
+  2. **Step 2:** Define Encoder Block
+    - The 3 different encoder block in each of the networks:
+      - MidasNet - ResNext101_32x8d_wsl
+      - Planercnn - ResNet101
+      - Yolov3 - Darknet-53
+    - My initial thoughts was to use Darknet as the base encoder, as the similar accuracy as ResNet and it is almost 2x faster based on performance on ImageNet dataset, but the downside of it is compartively complex to separate only the config of Darknet from Yolov3 config and then run the same code blocks from Yolov3 from model definition and forward method, This could mean i have to recreate those code blocks with changes so that only Darknet encoder is proccesed.
+    Hence, as the enocder-decoder of Yolov3 is tighly coupled in code i decided against using it.
+    - On other two options, I had tried both of them separately as the encoder blocks, based on the benchmarks ResNext-101 has perfomed better than Resnet-101 and ResNext WSL is maintained by facebook and are pre-trained in weakly-supervised fashion on 940 million public images with 1.5K hashtags matching with 1000 ImageNet1K synsets, followed by fine-tuning on ImageNet1K dataset
+
 
 
 Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
