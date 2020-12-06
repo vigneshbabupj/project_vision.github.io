@@ -24,7 +24,7 @@
 
 ## Problem Statement
 The assignment is to create a network that can perform 3 tasks simultaneously:
-  1. Predict the boots, PPE, hardhat, and mask if there is an image
+  1. Predict the boots, PPE, hardhat, and mask if any present in the image
   2. Predict the depth map of the image
   3. Predict the Planar Surfaces in the region
 
