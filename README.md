@@ -38,7 +38,7 @@ The strategy is to use pre-trained networks and use their outputs as the ground 
 
 The Network is of Encoder-Decoder Architecture
 
-![vision](https://github.com/vigneshbabupj/Project_Vision/blob/main/documents/vision.PNG)
+![vision](https://raw.githubusercontent.com/vigneshbabupj/Project_Vision/main/documents/vision.png)
 
 - Layers: 1056
 - Parameters: 23.7m
