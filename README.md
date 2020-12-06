@@ -116,7 +116,7 @@ In this section I will explain the steps taken to reach the final trainable mode
 Significant amount of time was invested in the initial to read all the research papers of each model and get a understanding of their architecture, this would enable us to split their encoder from their decoder.
 
   1. **Step 1:** To define the high outline of the final model and then start to give definition for each of its components
-    - The structure of the model defined is as below
+      - The structure of the model defined is as below
 
     ```python
 
@@ -160,19 +160,19 @@ Significant amount of time was invested in the initial to read all the research 
     ```
 
   2. **Step 2:** Define Encoder Block
-    - The 3 different encoder block in each of the networks:
-      - MidasNet - ResNext101_32x8d_wsl
-      - Planercnn - ResNet101
-      - Yolov3 - Darknet-53
-    - My initial thoughts was to use Darknet as the base encoder, as the similar accuracy as ResNet and it is almost 2x faster based on performance on ImageNet dataset, but the downside of it is compartively complex to separate only the config of Darknet from Yolov3 config and then run the same code blocks from Yolov3 from model definition and forward method, This could mean i have to recreate those code blocks with changes so that only Darknet encoder is proccesed.
-    Hence, as the enocder-decoder of Yolov3 is tighly coupled in code i decided against using it.
-    - On other two options, I had tried both of them separately as the encoder blocks, based on the benchmarks ResNext-101 has perfomed better than Resnet-101 and ResNext WSL is maintained by facebook and are pre-trained in weakly-supervised fashion on 940 million public images with 1.5K hashtags matching with 1000 ImageNet1K synsets, followed by fine-tuning on ImageNet1K dataset, So the below ResNext block is used as enoder with the pretrained weights
+      - The 3 different encoder block in each of the networks:
+        - MidasNet - ResNext101_32x8d_wsl
+        - Planercnn - ResNet101
+        - Yolov3 - Darknet-53
+      - My initial thoughts was to use Darknet as the base encoder, as the similar accuracy as ResNet and it is almost 2x faster based on performance on ImageNet dataset, but the downside of it is compartively complex to separate only the config of Darknet from Yolov3 config and then run the same code blocks from Yolov3 from model definition and forward method, This could mean i have to recreate those code blocks with changes so that only Darknet encoder is proccesed.
+      Hence, as the enocder-decoder of Yolov3 is tighly coupled in code i decided against using it.
+      - On other two options, I had tried both of them separately as the encoder blocks, based on the benchmarks ResNext-101 has perfomed better than Resnet-101 and ResNext WSL is maintained by facebook and are pre-trained in weakly-supervised fashion on 940 million public images with 1.5K hashtags matching with 1000 ImageNet1K synsets, followed by fine-tuning on ImageNet1K dataset, So the below ResNext block is used as enoder with the pretrained weights
 
-    ```python
-         resnet = torch.hub.load("facebookresearch/WSL-Images", "resnext101_32x8d_wsl")
-    ```
+```python
+     resnet = torch.hub.load("facebookresearch/WSL-Images", "resnext101_32x8d_wsl")
+```
 
-    - The encoder is defined with 4 pretrained layers
+      - The encoder is defined with 4 pretrained layers
 
 
     ```python
@@ -379,7 +379,7 @@ Significant amount of time was invested in the initial to read all the research 
 
     ```
 
-    
+
 
 ## Set up Model Training
   1. **Step 1:** Define input parameters for training
