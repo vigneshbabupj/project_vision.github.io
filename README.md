@@ -416,14 +416,14 @@ Significant amount of time was invested in the initial to read all the research 
 
   > python detection.py 
 
-    - Example:
-      - Object Detection output:
+  - Example:
+    - Object Detection output:
 
-      ![yoloy_out](https://github.com/vigneshbabupj/Project_Vision/blob/main/documents/Yolo_output.jpg)
+    ![yoloy_out](https://github.com/vigneshbabupj/Project_Vision/blob/main/documents/Yolo_output.jpg)
 
-      - Midas detection
+    - Midas detection
 
-      ![midas_out](https://github.com/vigneshbabupj/Project_Vision/blob/main/documents/19_depth.png)
+    ![midas_out](https://github.com/vigneshbabupj/Project_Vision/blob/main/documents/19_depth.png)
 
 
 
