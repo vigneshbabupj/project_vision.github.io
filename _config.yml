@@ -8,3 +8,4 @@ show_downloads: ["true"]
 github:
   zip_url: https://github.com/vigneshbabupj/Project_Vision/archive/main.zip
   tar_url: https://github.com/vigneshbabupj/Project_Vision/archive/main.zip
+  repository_url: https://github.com/vigneshbabupj/Project_Vision.git
