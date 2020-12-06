@@ -5,8 +5,8 @@
 
 
 <!-- TABLE OF CONTENTS -->
+## Table of Contents
 <details open="open">
-  <summary>Table of Contents</summary>
   <ol>
     <li><a href="#problem-statement">Problem Statement</a></li>
     <li><a href="#model">Model</a></li>
@@ -15,6 +15,7 @@
     <li><a href="#set-up-model-training">Set up Model Training</a></li>
     <li><a href="#training">Training</a></li>
     <li><a href="#detection">Detection</a></li>
+    <li><a href="#future-scope">Future Scope</a></li>
     <li><a href="#Support-or-Contact">Support or Contact</a></li>
   </ol>
 </details>
@@ -425,8 +426,15 @@ Significant amount of time was invested in the initial to read all the research 
 
     ![midas_out](https://raw.githubusercontent.com/vigneshbabupj/Project_Vision/main/documents/19_depth.png)
 
+    - Plane segmentation (create test folder in project_vision folder to save  plane images during training also)
 
+    ![plane_out](https://raw.githubusercontent.com/vigneshbabupj/Project_Vision/main/documents/1112_segmentation_270_0.png)
 
+## Future Scope
+  - Definitely there huge scope for model improvement, its current performance is not upto the mark
+  - revist the image augmentation strategies to define something which suits for all 3 tasks
+  - Collect more data and train the model for more epochs
+  - Play around with loss function
 
 ### Support or Contact
 
