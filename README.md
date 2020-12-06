@@ -16,7 +16,6 @@
     <li><a href="#training">Training</a></li>
     <li><a href="#detection">Detection</a></li>
     <li><a href="#Support-or-Contact">Support or Contact</a></li>
-    <li><a href="#acknowledgements">Acknowledgements</a></li>
   </ol>
 </details>
 
@@ -42,6 +41,7 @@ The Network is of Encoder-Decoder Architecture
 
 - Layers: 1056
 - Parameters: 23.7m
+- Min loss: 7
 - Trained Model weight - [Download](https://drive.google.com/file/d/1iP1Twh74zqczOJOcmhGLCxe_DpbwZ3KY/view?usp=sharing)
 
 ## Dataset 
@@ -402,11 +402,12 @@ Significant amount of time was invested in the initial to read all the research 
   5. The time taken for each epoch initial was around 1.15 hours, this was reduced after standardising the image scales in all decoder to 512, (Planercnn had 480\*640 and midas was working with 384\*384). The time taken for each epoch right now is 40-50 min
 
   6. **Part 1 training** we could see the overall loss decreasing as the model is getting trained, The initial for epoch 0 was at 21. ([notebook](https://github.com/vigneshbabupj/Project_Vision/blob/main/Project_vision_Training_Part1.ipynb))
-  ![part1](https://github.com/vigneshbabupj/Project_Vision/blob/main/documents/Training_part1.jpg)
+
+  ![part1](https://raw.githubusercontent.com/vigneshbabupj/Project_Vision/main/documents/Training_part1.jpg)
 
   7. **Part 2 training** the overall loss further reduced in subsquent epochs to 7 ([notebook](https://github.com/vigneshbabupj/Project_Vision/blob/main/Training_part2.ipynb))
 
-  ![part2](https://github.com/vigneshbabupj/Project_Vision/blob/main/documents/Training_part2.jpg)
+  ![part2](https://raw.githubusercontent.com/vigneshbabupj/Project_Vision/main/documents/Training_part2.jpg)
 
 
 ## Detection
@@ -418,11 +419,11 @@ Significant amount of time was invested in the initial to read all the research 
   - Example:
     - Object Detection output:
 
-    ![yoloy_out](https://github.com/vigneshbabupj/Project_Vision/blob/main/documents/Yolo_output.jpg)
+    ![yoloy_out](https://raw.githubusercontent.com/vigneshbabupj/Project_Vision/main/documents/Yolo_output.jpg)
 
     - Midas detection
 
-    ![midas_out](https://github.com/vigneshbabupj/Project_Vision/blob/main/documents/19_depth.png)
+    ![midas_out](https://raw.githubusercontent.com/vigneshbabupj/Project_Vision/main/documents/19_depth.png)
 
 
 
