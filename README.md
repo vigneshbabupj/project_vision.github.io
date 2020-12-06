@@ -289,6 +289,7 @@ Significant amount of time was invested in the initial to read all the research 
           * Encoder layer 3 output --> FPN C3 layer
           * Encoder layer 4 output --> FPN C4 layer
       * Key concept in Planercnn integration is that the default nms and ROI is coplied on the torch verions 0.4, which is incompatible with other decoder modules which use latest torch version, to handle this the default nms was replaced with the nms from torchvision and the ROI Align buit on pytorch([link](https://github.com/longcw/RoIAlign.pytorch)) was used
+      * One key issue faced during training is of gradient explosion after one iteration of the model train, post significant time debuggin the reason in due to the replacement of the resnet101 directly with the custom encoder blocks, the solution for the issue was to retain the resnet101 structure but to replace the value of tht corresponding layers in FPN with enocder layers in the forward method
 
   6. **Step 6:** The Trainable model
 
@@ -383,10 +384,39 @@ Significant amount of time was invested in the initial to read all the research 
       - This ensures we able to pass the required input parameters including weights path for each of the decoders separately
 
   2. **Step 2:** Define Skeleton
-      - 
+      - [Midasnet](https://github.com/intel-isl/MiDaS) repo is defined only for inference and train for custom data is not part of it
+      - [Planercnn](https://github.com/NVlabs/planercnn) repo is pretty huge and structure for train dataset and process for generating the dataset is complex and time taking
+      - [Yolov3](https://github.com/theschoolofai/YoloV3) repo has defined the training process
+      - hence used the Yolov3 training code as reference for the training the model
+  3. **Step 3:** Data loader
+      - Defined different dataset for train and test from the split train.txt and test.txt file from the dataset
+      - included the data tranformations from the 3 decoders
+      - Additionaly for Planercnn training loaded the segmentation_final.png and plane_parameters.npy & plane_masks.npy files and similarly for depth training loaded the depth map images
+      - Code blocks of Planercnn is defined only to work for batch size of 1, hence any other batch size > 1 will not work with the current code base
 
+  4. **Step 4:** Loss function
+      - Object detection - the compute loss method of the yolov3 code base to calculate the loss for the object detection network, The complete loss equation as below
 
+      ![yolo_loss](https://miro.medium.com/max/875/1*aW6htqx4Q7APLrSQg2eWDw.png)
 
+      - Depth Estimation - to compare the predicted depth map with that of the target image a combination of the below two loss is use
+        - RMSE(Root Mean Square Error): RMSE helps to cut the large errors interms of difference in the intensity of the pixels of the image
+        ![rmse](https://media.geeksforgeeks.org/wp-content/uploads/20200622171741/RMSE1.jpg)
+        - SSIM(structural similarity index measure): SSIM helps to also measure the structural differences between the predicted and the acutal depths and also to punish noises in the prediction
+        ![ssim]()
+        - **Depth_loss = RMSE + SSIM**
+
+      - Plane Segmentation - to define loss for plane segmentation 
+        - The predefined loss function in planercnn uses cross_entropy loss to compare rpn_class and rpn_bbox
+        - MSE(Mean Squared Error) is used to directly compare the plane_parameters.npy & Plane_masks.npy with the predicted np arrays, MSE performs better at pixel level comparison
+        - SSIM is also used to compare the segmentation image predicted with target image
+        - **Plane_loss = computed_loss + MSE_Loss + SSIM**
+
+      - overall loss
+      **all_loss = (add_plane_loss \* plane_loss) + (add_yolo_loss \* yolo_loss) + (add_midas_loss \* depth_loss)**
+
+    5. **Step 5:** Optimizer
+        - 
 
 Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
 
